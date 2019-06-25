@@ -19,4 +19,7 @@ button {
     background-color: transparent;
     outline: none;
 }
+img{
+    display: block;
+}
 </style>
