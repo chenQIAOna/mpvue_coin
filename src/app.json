@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/exposure/main",
+    "pages/mine/main",
+    "pages/search/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#232234",
+    "backgroundColor": "#232234",
+    "navigationBarTitleText": "死亡币记",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#4C4C4C",
+    "backgroundColor": "#1A1A26",
+    "selectedColor": "#F2612B",
+    "borderStyle": "black",
+    "list": [
+      {
+        "text": "发现",
+        "pagePath": "pages/index/main",
+        "iconPath": "static/tabs/discover.png",
+        "selectedIconPath": "static/tabs/discover-active.png"
+      },
+      {
+        "text": "曝光",
+        "pagePath": "pages/exposure/main",
+        "iconPath": "static/tabs/exposure.png",
+        "selectedIconPath": "static/tabs/exposure-active.png"
+      },
+      {
+        "text": "我的",
+        "pagePath": "pages/mine/main",
+        "iconPath": "static/tabs/mine.png",
+        "selectedIconPath": "static/tabs/discover-active.png"
+      }
+    ],
+    "position": "bottom"
+  }
+}
