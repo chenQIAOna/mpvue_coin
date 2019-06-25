@@ -1,7 +1,7 @@
 <template>
     <div class="d-container">
         <!-- 搜索框 -->
-        <navigator  class="d-search" url='../search/main'>
+        <navigator class="d-search" url='../search/main'>
             <input class="d-search_input" type="text" placeholder="挖坟，我们是专业的！" disabled="disabled">
             <i class="iconfont icon-ic-search d-search_icon"></i>
         </navigator >
@@ -112,7 +112,6 @@ export default {
         padding: 20rpx 30rpx;
     }
     /* 搜索框 */
-
     .d-search {
         margin-bottom: 64rpx;
         position: relative;
