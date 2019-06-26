@@ -18,8 +18,28 @@ button {
     border: 0;
     background-color: transparent;
     outline: none;
+    padding: 0;
+    margin: 0 atuo;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 img{
     display: block;
 }
+
+.border_bottom{
+    border-bottom: 1rpx solid rgba(255,255,255,.1);
+}
+.border{
+    border: 1rpx solid rgba(255,255,255,.1);
+}
+.pr{
+    position: relative;
+}
+.pa{
+    position: absolute;
+}
+
+
 </style>

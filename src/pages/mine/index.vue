@@ -2,13 +2,18 @@
     <div class="m-container">
         <!-- 个人信息 -->
         <div class="m-userInfo">
-            <div class="m-userInfo_avatar">
+            <div class="m-userInfo_avatar pr">
                 <img class="m-userInfo_avatar-img" src="../../../static/images/avatar.png" alt>
             </div>
-            <span class="m-userInfo_userName">JONES爱曝光</span>
+            <span v-if="false" class="m-userInfo_userName">JONES爱曝光</span>
+            <navigator class="m-userInfo_login">
+                <span class="login_text">立即登录</span>
+                <i class="iconfont icon-jiantou login_arrow"></i>
+            </navigator>
         </div>
         <!-- 曝光历史 -->
         <div class="m-history">
+            <!-- 标题 -->
             <div class="m-history_title">
                 <span class="m-history_title-name">曝光历史</span>
                 <div class="m-history_title-sort">
@@ -16,8 +21,20 @@
                     <button class="histoty_btn active">倒序</button>
                 </div> 
             </div>
+            <!-- 历史列表 -->
+            <ul class="m-history_list">
+                <li v-for="(item,index) in 10" :key="index" class="m-history_item">
+                    <p class="m-history_item-title pr">Alpencoin</p>
+                    <div class="m-history_item-content">
+                        <span class="content_text">我的钱都砸进里面了，想不到网站停止运营了，这个可是我的老婆本啊。我要曝光这个不要脸的币种，大家千万别上当啊</span>
+                        <img class="content_img" src="../../../static/images/mine_default.png" alt="">
+                    </div>
+                    <!-- 日期 -->
+                    <p class="m-history_item-date">2018.10.07</p>
+                </li>
+            </ul>
         </div>
-        <!-- <default-page/> -->
+        <default-page :init-type="'other'"/>
     </div>
 </template>
 
@@ -28,14 +45,16 @@ export default {
     components: { defaultPage },
 
     data() {
-        return {};
+        return {
+            
+        };
     },
 
     computed: {}
 };
 </script>
 <style lang="scss" scoped>
-/* m-history */
+/* 个人信息 */
 .m-userInfo {
     margin: 20rpx 0rpx 70rpx 40rpx;
     display: flex;
@@ -45,14 +64,12 @@ export default {
         width: 166rpx;
         height: 166rpx;
         background:linear-gradient(180deg, #616481 0%, #3A3D59 100%);
-        // background: red;
         border-radius: 50%;
         margin-right: 30rpx;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        position: relative;
         &::after{
             content:'';
             display: block;
@@ -68,14 +85,32 @@ export default {
         &-img{
             width: 138rpx;
             height: 138rpx;
-            z-index: 999;
+            z-index: 99;
             border-radius: 50%;
+            position: relative;
         }
     }
     &_userName {
         font-size: 32rpx;
         font-weight: bold;
         color: #fff;
+    }
+    &_login{
+        height: 45rpx;
+        color: #F2612B;
+        display: flex;
+        justify-content: center;
+        padding: 10rpx;
+        .login_text{
+            font-size: 32rpx;
+            display: block;
+        }
+        .login_arrow{
+            display: flex;
+            align-items: center;
+            font-size: 28rpx;
+            margin-left: 6rpx;
+        }
     }
 }
 /* 曝光历史 */ 
@@ -97,21 +132,66 @@ export default {
             background: #2A2B3D;
             display: flex;
             .histoty_btn{
-                line-height: 48rpx;
                 color: #fff;
                 opacity: .4;
                 font-size: 22rpx;
-                padding: 0;
                 flex: 1;
+                border-radius: 8rpx;
             }
             .active{
                 opacity:1;
                 background: #5757FF;
-                border-radius: 8rpx;
             }
         }
     }
+    /* 历史列表 */ 
+    &_list{
+        padding-left: 54rpx;
+    }
+    &_item{
+        padding: 30rpx 0;
+        border-bottom: 1rpx solid rgba(255,255,255,.1);
+        &-title{
+            font-size: 30rpx;
+            font-weight: bold;
+            color: #F2612B;
+            &::before{
+                content: '';
+                display: block;
+                width: 16rpx;
+                height: 16rpx;
+                border: 4rpx solid #F2612B;
+                border-radius: 50%;
+                position: absolute;
+                left: -54rpx;
+                top: 50%;
+                transform: translateY(-50%)
+            }
+        }
+        &-content{
+            display: flex;
+            margin: 10rpx 0 12rpx;
+            .content_text{
+                color: #CCCCCC;
+                font-size: 26rpx;
+                flex: 1;
+            }
+            .content_img{
+                max-height: 148rpx;
+                max-width: 148rpx;
+                margin-left: 30rpx;
+            }
+        }
+        &-date{
+            font-size: 22rpx;
+            color: #A0A0A0;
+            line-height: 30rpx;
+        }
+    }
+
 }
+
+
 </style>
 
 

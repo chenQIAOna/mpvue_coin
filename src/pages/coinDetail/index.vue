@@ -1,44 +1,34 @@
 <template>
-    <div class="d-container">
-        <!-- 搜索框 -->
-        <navigator class="d-search pr" url="../search/main">
-            <input class="d-search_input" type="text" placeholder="挖坟，我们是专业的！" disabled="disabled">
-            <i class="iconfont icon-ic-search d-search_icon"></i>
-        </navigator>
-        <!-- 死亡币种 -->
-        <div class="d-nav">
-            <p class="d-nav_title">死亡币种</p>
-            <ul class="d-nav_list">
-                <li class="d-nav_item" @click="toCoinDetail">
-                    <!-- css写出来的图片效果 -->
-                    <div class="d-nav_item-img pr">
-                        <i class="iconfont icon-rongzi d-nav_item-icon"></i>
-                    </div>
-                    <p class="d-nav_item-name">融资</p>
-                </li>
-                <li class="d-nav_item">
-                    <div class="d-nav_item-img d-nav_item-bg2 pr">
-                        <i class="iconfont icon-egao d-nav_item-icon"></i>
-                    </div>
-                    <p class="d-nav_item-name">恶搞</p>
-                </li>
-                <li class="d-nav_item">
-                    <div class="d-nav_item-img d-nav_item-bg3 pr">
-                        <i class="iconfont icon-pianju d-nav_item-icon"></i>
-                    </div>
-                    <p class="d-nav_item-name">骗局</p>
-                </li>
-                <li class="d-nav_item">
-                    <div class="d-nav_item-img d-nav_item-bg4 pr">
-                        <i class="iconfont icon-yiqi d-nav_item-icon"></i>
-                    </div>
-                    <p class="d-nav_item-name">遗弃</p>
-                </li>
-            </ul>
-        </div>
-        <!-- 最新曝光 -->
-        <div class="d-exposure">
-            <p class="d-nav_title d-exposure_title">最新曝光</p>
+    <div class="cd-container">
+        <div class="cd-main pr">
+            <!-- css写出来的图片效果 -->
+            <div class="cd-main_imgbox">
+                <!-- 融资 -->
+                <div v-if="false" class="cd-main_imgbox_iconBg">
+                    <i class="iconfont icon-rongzi cd-main_imgbox_icon"></i>
+                </div>
+                <!-- 恶搞 -->
+                <div v-if="false" class="cd-main_imgbox_iconBg bg2">
+                    <i class="iconfont icon-egao cd-main_imgbox_icon"></i>
+                </div>
+                <!-- 骗局 -->
+                <div v-if="false" class="cd-main_imgbox_iconBg bg3">
+                    <i class="iconfont icon-pianju cd-main_imgbox_icon"></i>
+                </div>
+                <!-- 遗弃 -->
+                <div class="cd-main_imgbox_iconBg bg4">
+                    <i class="iconfont icon-yiqi cd-main_imgbox_icon"></i>
+                </div>
+
+            </div>
+            <!-- 排序 -->
+            <div class="cd-main_sort">
+                <div class="cd-main_sort_btnbox">
+                    <button class="histoty_btn ">最新</button>
+                    <button class="histoty_btn active">倒序</button>
+                </div>
+            </div>
+
             <div class="d-exposure_list">
                 <!-- 每一项开始 -->
                 <div class="d-exposure_item">
@@ -79,146 +69,133 @@
         </div>
     </div>
 </template>
-
 <script>
 export default {
     data() {
-        return {
-            msg: "Hello"
-        };
-    },
-
-    methods: {
-        // 前往详情页
-        toExposureDetail() {
-            wx.navigateTo({ url: "../exposureDetail/main" });
-        },
-        toCoinDetail() {
-            wx.navigateTo({ url: "../coinDetail/main" });
-
-        }
+        return {};
     }
 };
 </script>
-
-<style lang="scss" rel="stylesheet/scss" scoped>
-.d-container {
-    padding: 20rpx 30rpx;
+<style lang="scss" scoped>
+.cd-container {
+    background: #f87618;
+    height: 100%;
+    padding-top: 112rpx;
 }
-/* 搜索框 */
-.d-search {
-    margin-bottom: 64rpx;
-
-    &_input {
-        height: 64rpx;
-        line-height: 40rpx;
-        background: rgba(42, 43, 61, 1);
-        border-radius: 40rpx;
-        padding-left: 72rpx;
-        color: #f2612b;
-        font-size: 28rpx;
-        caret-color: white; /* input框光标颜色 */
-    }
-    &_icon {
-        position: absolute;
-        top: 50%;
-        left: 30rpx;
-        transform: translateY(-50%);
-        color: #ccc;
-    }
-}
-
-/* 死亡币种 */
-.d-nav {
-    margin-bottom: 80rpx;
-    &_title {
-        font-size: 36rpx;
-        font-weight: bold;
-        color: #fff;
-        margin-bottom: 40rpx;
-    }
-    &_list {
+.cd-main {
+    border-radius: 16rpx 16rpx 0rpx 0rpx;
+    background: #232234;
+    padding: 30rpx;
+    /* 圆圈 */
+    &_imgbox {
+        width: 168rpx;
+        height: 168rpx;
+        border-radius: 50%;
+        background: linear-gradient(
+            180deg,
+            rgba(62, 60, 95, 1) 0%,
+            rgba(35, 34, 52, 1) 100%
+        );
         display: flex;
-        justify-content: space-between;
-        padding: 0 26rpx;
-    }
-    &_item {
-        text-align: center;
-        &-img {
-            width: 114rpx;
-            height: 114rpx;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12rpx;
+        position: absolute;
+        top: -84rpx;
+        left: 40rpx;
+        &::before {
+            content: "";
+            display: block;
+            width: 160rpx;
+            height: 160rpx;
             border-radius: 50%;
             background: linear-gradient(
                 180deg,
                 rgba(120, 120, 120, 1) 0%,
                 rgba(67, 67, 67, 1) 100%
             );
-            border: 4rpx solid rgba(54, 55, 73, 1);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        &::after {
+            content: "";
+            display: block;
+            width: 143rpx;
+            height: 143rpx;
+            border-radius: 50%;
+            background: #232234;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        &_iconBg {
+            z-index: 9999;
+            width: 90rpx;
+            height: 90rpx;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                rgba(251, 130, 28, 1) 0%,
+                rgba(234, 69, 8, 1) 100%
+            );
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12rpx;
-            &::before {
-                content: "";
-                display: block;
-                width: 98rpx;
-                height: 98rpx;
-                border-radius: 50%;
-                background: #232234;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
-            &::after {
-                content: "";
-                display: block;
-                width: 62rpx;
-                height: 62rpx;
-                border-radius: 50%;
-                background: linear-gradient(
-                    135deg,
-                    rgba(246, 123, 19, 1) 0%,
-                    rgba(234, 69, 8, 1) 100%
-                );
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
         }
-        &-icon {
-            z-index: 99;
-            color: #232234;
-            font-size: 42rpx;
-            font-weight: bold;
-        }
-        &-name {
-            font-size: 24rpx;
-            color: #fff;
-            line-height: 32rpx;
-            opacity: 0.64;
-        }
-        &-bg2:after {
+        .bg2 {
             background: linear-gradient(
                 180deg,
                 rgba(255, 217, 83, 1) 0%,
                 rgba(255, 178, 41, 1) 100%
             );
         }
-        &-bg3:after {
+        .bg3 {
             background: linear-gradient(
                 135deg,
                 rgba(110, 226, 224, 1) 0%,
                 rgba(36, 160, 144, 1) 100%
             );
         }
-        &-bg4:after {
+        .bg4 {
             background: linear-gradient(
                 135deg,
                 rgba(173, 173, 173, 1) 0%,
                 rgba(68, 68, 68, 1) 100%
             );
+        }
+
+        &_icon {
+            font-size: 56rpx;
+            font-weight: bold;
+            color: #232234;
+        }
+    }
+
+    /* 排序 */
+    &_sort {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 50rpx;
+        &_btnbox{
+            display: flex;
+            width: 160rpx;
+            height: 48rpx;
+            background: #2a2b3d;
+            border-radius: 8rpx;
+        }
+        .histoty_btn {
+            color: #fff;
+            opacity: 0.4;
+            font-size: 22rpx;
+            flex: 1;
+            border-radius: 8rpx;
+        }
+        .active {
+            opacity: 1;
+            background: #5757ff;
         }
     }
 }
@@ -317,6 +294,5 @@ export default {
     }
 }
 </style>
-
 
 

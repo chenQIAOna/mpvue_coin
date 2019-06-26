@@ -3,7 +3,9 @@
     "pages/index/main",
     "pages/exposure/main",
     "pages/mine/main",
-    "pages/search/main"
+    "pages/search/main",
+    "pages/exposureDetail/main",
+    "pages/coinDetail/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
