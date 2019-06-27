@@ -1,7 +1,7 @@
 <template>
-    <div class="loadmore" v-show='!showTis' @click="clickMore">
-        <img class="icon" :class="{'showIcon':active}" src="../../static/images/timg.gif" alt="">
-        <span>{{text}}</span>
+    <div class="loadmore" v-show='showThis' @click="clickMore">
+        <img v-show="showIcon" class="icon" :class="{'active':showIcon}" src="../../static/images/timg.gif" alt="">
+        <span class="loadmore_text">{{text}}</span>
     </div>
 </template>
 <script>
@@ -12,39 +12,39 @@ export default {
     props: {
         hasMore: {
             type: Boolean,
-            value: false
+            default: false
         },
         // 加载中的显示文本
         loadingText: {
             type: String,
-            value: '加载中...'
+            default: '加载中...'
         },
         // 加载失败的显示文本
         failText: {
             type: String,
-            value: '加载失败, 请点击重试!'
+            default: '加载失败, 请点击重试!'
         },
         // 没有更多后的显示文本, 默认没有则隐藏加载更多控件
         finishText: {
             type: String,
-            value: '没有更多数据了'
+            default: '没有更多数据了'
         },
         // 列表渲染延时, 默认为 500 ms
         // ps 如果能监听setData() 渲染结束的话则可以不需要延时 
         listRenderingDelay: {
             type: Number,
-            value: 500
+            default: 500
         },
         //每页默认加载数量
         pageCur:{
             type: Number,
-            value: 20
+            default: 20
         }
     },
 
     data() {
         return{
-            showTis: false,
+            showThis: false,
             text: '',
             showIcon: false,
             isLoading: false,
@@ -69,16 +69,19 @@ export default {
         //加载完成, 传入hasMore 
         loadMoreComplete: function (length) {
             var hasMore = length < this.pageCur;
-            // var text = '', showThis = false, showIcon = false;
+            var text = '', showThis = false, showIcon = false;
 
             if (!hasMore) {
-                this.showIcon = true
-                this.showThis = true
-                this.text = this.loadingText
+                showIcon = true
+                showThis = true
+                text = this.loadingText
             } else if (this.finishText.length > 0) {
-                this.text = this.finishText
-                this.showThis = true
+                text = this.finishText
+                showThis = true
             }
+            this.showIcon = showIcon;
+            this.text = text;
+            this.showThis = showThis;
 
             //界面渲染延迟, 避免列表还未渲染完成就再次触发 loadMore 方法
             setTimeout(function () {
@@ -108,7 +111,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 /* pages/components/loadMore/loadMore.wxss */
 .loadmore {
     height: 50rpx;
@@ -116,12 +119,15 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: #232234;
+    padding: 20rpx;
   }
   
-  .loadmore text{
+  .loadmore_text{
     font-size:26rpx;
     color: #bfbfbf;
     font-weight: bold;
+    opacity: .6;
   }
   
   .icon{
@@ -130,7 +136,7 @@ export default {
     margin-right: 10rpx;
   }
 
-  .active {
+  .loadmore .active {
     animation: weuiLoading 0.6s steps(12, end) infinite;
   }
 

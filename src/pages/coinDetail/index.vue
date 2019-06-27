@@ -25,34 +25,34 @@
             <div class="d-exposure_list">
                 <!-- 每一项开始 -->
                 <div
-                    v-for="(item, index_) in coinList"
+                    v-for="(item, index_) in newCoinList"
                     :key="index_"
                     @click="toExposureDetail"
                     class="d-exposure_item"
                 >
                     <p class="d-exposure_item-date pr">{{item.exposureTime}}</p>
-                    <ul v-for="el in item.data" :key="el.id" class="d-exposure_item_ul">
+                    <ul class="d-exposure_item_ul">
                         <!-- 每一项中每一列 -->
-                        <li class="d-exposure_item_li">
+                        <li v-for="el in item.data" :key="el.id" class="d-exposure_item_li">
                             <div class="d-exposure_item_li-left">
                                 <div class="d-exposure_item_li-left_des">
                                     <span class="des_title">名称</span>
-                                    <span class="des_name">VYIGRAT</span>
+                                    <span class="des_name">{{el.name}}</span>
                                 </div>
                                 <div class="d-exposure_item_li-left_des">
                                     <span class="des_title">代码</span>
-                                    <span class="des_name color_white">VYI</span>
+                                    <span class="des_name color_white">{{el.code}}</span>
                                 </div>
                                 <div class="d-exposure_item_li-left_des">
                                     <span class="des_title">分类</span>
-                                    <span class="des_name color_white">融资死亡币</span>
+                                    <span class="des_name color_white">{{el.category}}</span>
                                 </div>
                             </div>
                             <div class="d-exposure_item_li-right">
-                                <button class="rightBtn">已曝光</button>
-                                <button class="rightBtn">已跑路</button>
+                                <button v-for="(tagItem,i) in el.tags" :key="i" class="rightBtn">{{tagItem}}</button>
+                                <!-- <button class="rightBtn">已跑路</button>
                                 <button class="rightBtn">已破获</button>
-                                <button class="rightBtn">已判决</button>
+                                <button class="rightBtn">已判决</button> -->
                             </div>
                         </li>
                     </ul>
@@ -75,6 +75,7 @@ export default {
             name: "",
             categoryId: 1,
             coinList: [],  // 列表
+            newCoinList:[],
             page: 1,  // 页码
             pageSize: 20,  // 每页数量
             hasMore: false  // 是否加载下一页
@@ -99,18 +100,12 @@ export default {
                 page: this.page
             };
             Http.Lget("/coin", data, res => {
-                console.log(res);
                 if (res.status === 200) {
                     // 判断是否加载下一页
                     this.hasMore = res.data.total <= this.pageSize
                     this.coinList = res.data.datas;
                     // 转换数据格式
-                    this.coinList = this.changeCoinList();
-                    console.log(this.coinList);
-                    wx.showToast({
-                        title: "成功",
-                        icon: "none"
-                    });
+                    this.newCoinList = this.changeCoinList();
                 } else {
                     wx.showToast({
                         title: "未知错误，请联系管理员",
@@ -151,7 +146,6 @@ export default {
                 return;
             }
             this.page++;
-            console.log(this.page,'pagepagepagepagepage');
             let data = {
                 categoryId: Number(this.categoryId),
                 page: this.page,
@@ -163,9 +157,12 @@ export default {
                     let dataLength = data.length; // 数据的长度
                     this.hasMore = dataLength < this.pageSize;
                     let initCoinListLength = this.coinList.length; // 初始化时消息列表长度
+                    console.log(initCoinListLength);
                     for (let idx in data) {
                         this.coinList[Number(initCoinListLength) +Number(idx)] = data[idx];
                     }
+                    // 转换数据格式
+                    this.newCoinList = this.changeCoinList();
                     // console.log(this.$refs.loadMore);
                     // 是否继续加载页数
                     this.$refs.loadMore.loadMoreComplete(dataLength);
@@ -318,6 +315,10 @@ export default {
         margin-bottom: 30rpx;
     }
     &_item {
+        padding-bottom: 56rpx;
+        &:nth-last-of-type(1){
+            padding-bottom: 0;
+        }
         &-date {
             font-size: 24rpx;
             opacity: 0.56;
@@ -378,6 +379,10 @@ export default {
             }
             &-right {
                 width: 150rpx;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
                 .rightBtn {
                     width: 90rpx;
                     height: 38rpx;
