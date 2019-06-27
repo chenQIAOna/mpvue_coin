@@ -81,11 +81,37 @@
 </template>
 
 <script>
+import { Http } from "../../utils/httpRequest";
 export default {
     data() {
         return {
-            msg: "Hello"
+            coinList: [
+                {
+                    id: 1,
+                    name: "融资",
+                    icon: "icon-rongzi"
+                },
+                {
+                    id: 1,
+                    name: "恶搞",
+                    icon: "icon-egao"
+                },
+                {
+                    id: 1,
+                    name: "骗局",
+                    icon: "icon-pianju"
+                },
+                {
+                    id: 1,
+                    name: "遗弃",
+                    icon: "icon-yiqi"
+                }
+            ]
         };
+    },
+
+    mounted() {
+        this.initList();
     },
 
     methods: {
@@ -95,7 +121,16 @@ export default {
         },
         toCoinDetail() {
             wx.navigateTo({ url: "../coinDetail/main" });
-
+        },
+        initList() {
+            let data = {
+                // categoryId:Number('-1'),
+                pageSize: 20,
+                page: 1
+            };
+            Http.Lget("/coin", data, res => {
+                console.log(res);
+            });
         }
     }
 };

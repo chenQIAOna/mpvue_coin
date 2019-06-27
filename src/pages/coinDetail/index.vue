@@ -19,12 +19,11 @@
                 <div class="cd-main_imgbox_iconBg bg4">
                     <i class="iconfont icon-yiqi cd-main_imgbox_icon"></i>
                 </div>
-
             </div>
             <!-- 排序 -->
             <div class="cd-main_sort">
                 <div class="cd-main_sort_btnbox">
-                    <button class="histoty_btn ">最新</button>
+                    <button class="histoty_btn">最新</button>
                     <button class="histoty_btn active">倒序</button>
                 </div>
             </div>
@@ -70,10 +69,23 @@
     </div>
 </template>
 <script>
+import { getQuery } from '../../utils/utils';
 export default {
     data() {
-        return {};
-    }
+        return {
+            title: '融资死亡币'
+        };
+    },
+
+    mounted() {
+        wx.setNavigationBarTitle({
+            title: this.title
+        });
+        let a = getQuery();
+        console.log(a);
+    },
+
+    methods: {}
 };
 </script>
 <style lang="scss" scoped>
@@ -179,7 +191,7 @@ export default {
         display: flex;
         justify-content: flex-end;
         margin-bottom: 50rpx;
-        &_btnbox{
+        &_btnbox {
             display: flex;
             width: 160rpx;
             height: 48rpx;

@@ -23,6 +23,10 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
+    border: none;
+    &:after{
+        border: none;  /* 清楚button边框细线  小程序上特有*/
+    }
 }
 img{
     display: block;
