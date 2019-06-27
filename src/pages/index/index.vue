@@ -9,30 +9,20 @@
         <div class="d-nav">
             <p class="d-nav_title">死亡币种</p>
             <ul class="d-nav_list">
-                <li class="d-nav_item" @click="toCoinDetail">
+                <li
+                    v-for="item in categoryList"
+                    :key="item.id"
+                    class="d-nav_item"
+                    @click="toCoinDetail(item.id,item.name)"
+                >
                     <!-- css写出来的图片效果 -->
                     <div class="d-nav_item-img pr">
-                        <i class="iconfont icon-rongzi d-nav_item-icon"></i>
+                        <i class="iconfont d-nav_item-icon" :class="{'icon-rongzi': index===0}"></i>
+                        <i class="iconfont d-nav_item-icon" :class="{'icon-egao': index===1}"></i>
+                        <i class="iconfont d-nav_item-icon" :class="{'icon-pianju': index===2}"></i>
+                        <i class="iconfont d-nav_item-icon" :class="{'icon-yiqi': index===3}"></i>
                     </div>
-                    <p class="d-nav_item-name">融资</p>
-                </li>
-                <li class="d-nav_item">
-                    <div class="d-nav_item-img d-nav_item-bg2 pr">
-                        <i class="iconfont icon-egao d-nav_item-icon"></i>
-                    </div>
-                    <p class="d-nav_item-name">恶搞</p>
-                </li>
-                <li class="d-nav_item">
-                    <div class="d-nav_item-img d-nav_item-bg3 pr">
-                        <i class="iconfont icon-pianju d-nav_item-icon"></i>
-                    </div>
-                    <p class="d-nav_item-name">骗局</p>
-                </li>
-                <li class="d-nav_item">
-                    <div class="d-nav_item-img d-nav_item-bg4 pr">
-                        <i class="iconfont icon-yiqi d-nav_item-icon"></i>
-                    </div>
-                    <p class="d-nav_item-name">遗弃</p>
+                    <p class="d-nav_item-name">{{item.name}}</p>
                 </li>
             </ul>
         </div>
@@ -85,33 +75,12 @@ import { Http } from "../../utils/httpRequest";
 export default {
     data() {
         return {
-            coinList: [
-                {
-                    id: 1,
-                    name: "融资",
-                    icon: "icon-rongzi"
-                },
-                {
-                    id: 1,
-                    name: "恶搞",
-                    icon: "icon-egao"
-                },
-                {
-                    id: 1,
-                    name: "骗局",
-                    icon: "icon-pianju"
-                },
-                {
-                    id: 1,
-                    name: "遗弃",
-                    icon: "icon-yiqi"
-                }
-            ]
+            categoryList: []
         };
     },
 
     mounted() {
-        this.initList();
+        this.initCategory();
     },
 
     methods: {
@@ -119,17 +88,26 @@ export default {
         toExposureDetail() {
             wx.navigateTo({ url: "../exposureDetail/main" });
         },
-        toCoinDetail() {
-            wx.navigateTo({ url: "../coinDetail/main" });
+        toCoinDetail(id, name) {
+            wx.navigateTo({
+                url: "../coinDetail/main?id=" + id + "&name=" + name
+            });
         },
-        initList() {
-            let data = {
-                // categoryId:Number('-1'),
-                pageSize: 20,
-                page: 1
-            };
-            Http.Lget("/coin", data, res => {
-                console.log(res);
+        // 初始化分类
+        initCategory() {
+            Http.Lget("/category", {}, res => {
+                if(res.status === 200){
+                    this.categoryList = res.data;
+                    for(let i=0;i<this.categoryList.length;i++){
+                        // 截取 ‘死亡币’三个字
+                        this.categoryList[i].name = this.categoryList[i].name.slice(0,2)
+                    }
+                }else {
+                    wx.showToast({
+                        title: '未知错误，请联系管理员',
+                        icon: 'none'
+                    })
+                }
             });
         }
     }
@@ -179,6 +157,40 @@ export default {
     }
     &_item {
         text-align: center;
+        /* 融资、恶搞、骗局、遗弃背景颜色 */
+        &:nth-of-type(2) {
+            > div {
+                &::after {
+                    background: linear-gradient(
+                        180deg,
+                        rgba(255, 217, 83, 1) 0%,
+                        rgba(255, 178, 41, 1) 100%
+                    );
+                }
+            }
+        }
+        &:nth-of-type(3) {
+            > div {
+                &::after {
+                    background: linear-gradient(
+                        135deg,
+                        rgba(110, 226, 224, 1) 0%,
+                        rgba(36, 160, 144, 1) 100%
+                    );
+                }
+            }
+        }
+        &:nth-of-type(4) {
+            > div {
+                &::after {
+                    background: linear-gradient(
+                        135deg,
+                        rgba(173, 173, 173, 1) 0%,
+                        rgba(68, 68, 68, 1) 100%
+                    );
+                }
+            }
+        }
         &-img {
             width: 114rpx;
             height: 114rpx;
@@ -233,27 +245,6 @@ export default {
             color: #fff;
             line-height: 32rpx;
             opacity: 0.64;
-        }
-        &-bg2:after {
-            background: linear-gradient(
-                180deg,
-                rgba(255, 217, 83, 1) 0%,
-                rgba(255, 178, 41, 1) 100%
-            );
-        }
-        &-bg3:after {
-            background: linear-gradient(
-                135deg,
-                rgba(110, 226, 224, 1) 0%,
-                rgba(36, 160, 144, 1) 100%
-            );
-        }
-        &-bg4:after {
-            background: linear-gradient(
-                135deg,
-                rgba(173, 173, 173, 1) 0%,
-                rgba(68, 68, 68, 1) 100%
-            );
         }
     }
 }

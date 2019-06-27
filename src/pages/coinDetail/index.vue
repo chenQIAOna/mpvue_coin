@@ -3,21 +3,15 @@
         <div class="cd-main pr">
             <!-- css写出来的图片效果 -->
             <div class="cd-main_imgbox">
-                <!-- 融资 -->
-                <div v-if="false" class="cd-main_imgbox_iconBg">
-                    <i class="iconfont icon-rongzi cd-main_imgbox_icon"></i>
-                </div>
-                <!-- 恶搞 -->
-                <div v-if="false" class="cd-main_imgbox_iconBg bg2">
-                    <i class="iconfont icon-egao cd-main_imgbox_icon"></i>
-                </div>
-                <!-- 骗局 -->
-                <div v-if="false" class="cd-main_imgbox_iconBg bg3">
-                    <i class="iconfont icon-pianju cd-main_imgbox_icon"></i>
-                </div>
-                <!-- 遗弃 -->
-                <div class="cd-main_imgbox_iconBg bg4">
-                    <i class="iconfont icon-yiqi cd-main_imgbox_icon"></i>
+                <!-- 1:融资 2:恶搞   3：骗局   4：遗弃-->
+                <div
+                    class="cd-main_imgbox_iconBg"
+                    :class="{'bg2':categoryId==2,'bg3':categoryId==3,'bg4':categoryId==4}"
+                >
+                    <i
+                        class="iconfont cd-main_imgbox_icon"
+                        :class="{'icon-rongzi': categoryId==1,'icon-egao':categoryId==2,'icon-pianju': categoryId==3,'icon-yiqi':categoryId==4}"
+                    ></i>
                 </div>
             </div>
             <!-- 排序 -->
@@ -30,16 +24,16 @@
 
             <div class="d-exposure_list">
                 <!-- 每一项开始 -->
-                <div class="d-exposure_item">
-                    <p class="d-exposure_item-date pr">2018.08.31</p>
-                    <ul class="d-exposure_item_ul">
+                <div
+                    v-for="(item, index_) in coinList"
+                    :key="index_"
+                    @click="toExposureDetail"
+                    class="d-exposure_item"
+                >
+                    <p class="d-exposure_item-date pr">{{item.exposureTime}}</p>
+                    <ul v-for="el in item.data" :key="el.id" class="d-exposure_item_ul">
                         <!-- 每一项中每一列 -->
-                        <li
-                            v-for="(item, index) in 3"
-                            :key="index"
-                            class="d-exposure_item_li"
-                            @click="toExposureDetail"
-                        >
+                        <li class="d-exposure_item_li">
                             <div class="d-exposure_item_li-left">
                                 <div class="d-exposure_item_li-left_des">
                                     <span class="des_title">名称</span>
@@ -66,26 +60,132 @@
                 <!-- 每一项结束 -->
             </div>
         </div>
+        <!-- loadingMore -->
+        <load-more id="loadMore" ref="loadMore"/>
     </div>
 </template>
 <script>
-import { getQuery } from '../../utils/utils';
+import { getQuery } from "../../utils/utils";
+import { Http } from "../../utils/httpRequest";
+import LoadMore from '../../components/loadMore';
 export default {
+    components: { LoadMore },
     data() {
         return {
-            title: '融资死亡币'
+            name: "",
+            categoryId: 1,
+            coinList: [],  // 列表
+            page: 1,  // 页码
+            pageSize: 20,  // 每页数量
+            hasMore: false  // 是否加载下一页
         };
     },
 
     mounted() {
+        this.name = getQuery().name;
+        this.categoryId = getQuery().id;
         wx.setNavigationBarTitle({
-            title: this.title
+            title: this.name + "死亡币"
         });
-        let a = getQuery();
-        console.log(a);
+        this.initCoinList();
     },
 
-    methods: {}
+    methods: {
+        // 初始化币种列表
+        initCoinList() {
+            let data = {
+                categoryId: Number(this.categoryId),
+                pageSize: this.pageSize,
+                page: this.page
+            };
+            Http.Lget("/coin", data, res => {
+                console.log(res);
+                if (res.status === 200) {
+                    // 判断是否加载下一页
+                    this.hasMore = res.data.total <= this.pageSize
+                    this.coinList = res.data.datas;
+                    // 转换数据格式
+                    this.coinList = this.changeCoinList();
+                    console.log(this.coinList);
+                    wx.showToast({
+                        title: "成功",
+                        icon: "none"
+                    });
+                } else {
+                    wx.showToast({
+                        title: "未知错误，请联系管理员",
+                        icon: "none"
+                    });
+                }
+            });
+        },
+
+        // 转换数据结构
+        changeCoinList() {
+            var map = {},
+                newCoinList = [];
+            for (var i = 0; i < this.coinList.length; i++) {
+                var coin_item = this.coinList[i];
+                if (!map[coin_item.exposureTime]) {
+                    newCoinList.push({
+                        exposureTime: coin_item.exposureTime,
+                        data: [coin_item]
+                    });
+                    map[coin_item.exposureTime] = coin_item;
+                } else {
+                    for (var j = 0; j < newCoinList.length; j++) {
+                        var dj = newCoinList[j];
+                        if (dj.exposureTime == coin_item.exposureTime) {
+                            dj.data.push(coin_item);
+                            break;
+                        }
+                    }
+                }
+            }
+            return newCoinList;
+        },
+
+        //加载更多消息列表
+        loadRecordList() {
+            if (this.hasMore) {
+                return;
+            }
+            this.page++;
+            console.log(this.page,'pagepagepagepagepage');
+            let data = {
+                categoryId: Number(this.categoryId),
+                page: this.page,
+                pageSize: this.pageSize
+            };
+            Http.Lget("/coin", data, res => {
+                if (res.status === 200) {
+                    let data = res.data.datas;
+                    let dataLength = data.length; // 数据的长度
+                    this.hasMore = dataLength < this.pageSize;
+                    let initCoinListLength = this.coinList.length; // 初始化时消息列表长度
+                    for (let idx in data) {
+                        this.coinList[Number(initCoinListLength) +Number(idx)] = data[idx];
+                    }
+                    // console.log(this.$refs.loadMore);
+                    // 是否继续加载页数
+                    this.$refs.loadMore.loadMoreComplete(dataLength);
+                } else {
+                    wx.showToast({
+                        icon: "none",
+                        title: res.msg,
+                        duration: 1500
+                    });
+                }
+            });
+        }
+    },
+
+    /**
+     * 页面上拉触底事件的处理函数
+     */
+    onReachBottom: function () {
+        this.loadRecordList();
+    },
 };
 </script>
 <style lang="scss" scoped>
