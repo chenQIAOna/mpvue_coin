@@ -31,35 +31,32 @@
             <p class="d-nav_title d-exposure_title">最新曝光</p>
             <div class="d-exposure_list">
                 <!-- 每一项开始 -->
-                <div class="d-exposure_item">
-                    <p class="d-exposure_item-date pr">2018.08.31</p>
+                <div v-for="(item, index_) in newCoinList" :key="index_" class="d-exposure_item">
+                    <p class="d-exposure_item-date pr">{{item.exposureTime}}</p>
                     <ul class="d-exposure_item_ul">
                         <!-- 每一项中每一列 -->
                         <li
-                            v-for="(item, index) in 3"
-                            :key="index"
+                            v-for="(el, i) in item.data"
+                            :key="i"
                             class="d-exposure_item_li"
-                            @click="toExposureDetail"
+                            @click="toExposureDetail(el.id)"
                         >
                             <div class="d-exposure_item_li-left">
                                 <div class="d-exposure_item_li-left_des">
                                     <span class="des_title">名称</span>
-                                    <span class="des_name">VYIGRAT</span>
+                                    <span class="des_name">{{el.name}}</span>
                                 </div>
                                 <div class="d-exposure_item_li-left_des">
                                     <span class="des_title">代码</span>
-                                    <span class="des_name color_white">VYI</span>
+                                    <span class="des_name color_white">{{el.code}}</span>
                                 </div>
                                 <div class="d-exposure_item_li-left_des">
                                     <span class="des_title">分类</span>
-                                    <span class="des_name color_white">融资死亡币</span>
+                                    <span class="des_name color_white">{{el.category}}</span>
                                 </div>
                             </div>
                             <div class="d-exposure_item_li-right">
-                                <button class="rightBtn">已曝光</button>
-                                <button class="rightBtn">已跑路</button>
-                                <button class="rightBtn">已破获</button>
-                                <button class="rightBtn">已判决</button>
+                                <button v-for="(tagItem, ind) in el.tags" :key="ind" class="rightBtn">{{tagItem}}</button>
                             </div>
                         </li>
                     </ul>
@@ -75,18 +72,24 @@ import { Http } from "../../utils/httpRequest";
 export default {
     data() {
         return {
-            categoryList: []
+            categoryList: [],
+            coinList:[],
+            newCoinList: [],
+            page: 1,
+            pageSize: 20,
+            hasMore: false
         };
     },
 
     mounted() {
         this.initCategory();
+        this.initCoinList();
     },
 
     methods: {
         // 前往详情页
-        toExposureDetail() {
-            wx.navigateTo({ url: "../exposureDetail/main" });
+        toExposureDetail(id) {
+            wx.navigateTo({ url: "../exposureDetail/main?id=" + id });
         },
         toCoinDetail(id, name) {
             wx.navigateTo({
@@ -109,7 +112,55 @@ export default {
                     })
                 }
             });
-        }
+        },
+
+        // 初始化币种列表
+        initCoinList() {
+            let data = {
+                // categoryId: Number(this.categoryId),
+                pageSize: this.pageSize,
+                page: this.page
+            };
+            Http.Lget("/coin", data, res => {
+                if (res.status === 200) {
+                    // 判断是否加载下一页
+                    this.hasMore = res.data.total <= this.pageSize
+                    this.coinList = res.data.datas;
+                    // 转换数据格式
+                    this.newCoinList = this.changeCoinList();
+                } else {
+                    wx.showToast({
+                        title: "未知错误，请联系管理员",
+                        icon: "none"
+                    });
+                }
+            });
+        },
+
+         // 转换数据结构
+        changeCoinList() {
+            var map = {},
+                newCoinList = [];
+            for (var i = 0; i < this.coinList.length; i++) {
+                var coin_item = this.coinList[i];
+                if (!map[coin_item.exposureTime]) {
+                    newCoinList.push({
+                        exposureTime: coin_item.exposureTime,
+                        data: [coin_item]
+                    });
+                    map[coin_item.exposureTime] = coin_item;
+                } else {
+                    for (var j = 0; j < newCoinList.length; j++) {
+                        var dj = newCoinList[j];
+                        if (dj.exposureTime == coin_item.exposureTime) {
+                            dj.data.push(coin_item);
+                            break;
+                        }
+                    }
+                }
+            }
+            return newCoinList;
+        },
     }
 };
 </script>
@@ -315,6 +366,10 @@ export default {
             }
             &-right {
                 width: 150rpx;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
                 .rightBtn {
                     width: 90rpx;
                     height: 38rpx;

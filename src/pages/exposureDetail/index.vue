@@ -1,23 +1,21 @@
 <template>
     <div class="ed-container">
         <div class="ed-header border_bottom">
-            <p class="ed-header_title">Phobos (PBS)</p>
-            <p class="ed-header_name">#融资死亡币#</p>
-            <p class="ed-header_date">起始时间：2018年/死亡时间：2018年</p>
+            <p class="ed-header_title">{{exposureDetail.name}}</p>
+            <p class="ed-header_name">#{{exposureDetail.category==1?'融资死亡币':exposureDetail.category==2?'恶搞死亡币':exposureDetail.category==3?'骗局死亡币':'遗弃死亡币'}}#</p>
+            <p class="ed-header_date">起始时间：{{exposureDetail.startTime}}/死亡时间：{{exposureDetail.endTime}}</p>
             <div class="ed-header_laber">
-                <button class="laber_btn">已曝光</button>
-                <button class="laber_btn">已跑路</button>
+                <button v-for="(item, index) in exposureDetail.tags" :key="index" class="laber_btn">{{item}}</button>
             </div>
         </div>
         <!-- 判决时间 -->
         <div class="ed-sentence border_bottom">
-            <p class="ed-sentence_date">判决时间：2018年</p>
-            <p class="ed-sentence_link">判决链接：<navigator class="ed-sentence_url">https://dribbble.com/shots/5306201</navigator></p>
+            <p class="ed-sentence_date">判决时间：{{exposureDetail.judgmentTime}}</p>
+            <p class="ed-sentence_link">判决链接：<navigator class="ed-sentence_url">{{exposureDetail.judgmentUrl}}</navigator></p>
         </div>
         <!-- 详情部分 -->
         <div class="ed-detail border_bottom pr">
-            <img class="ed-detail_img" src="../../../static/images/mine_default.png" alt="">
-            <p class="ed-detail_des">Phobos创建于2018年，不曾在任何主流交易所上线交易，之所以被列为死亡币是因为其市值排名在1000名之外，已被遗弃并被交易所下线，该项目创始人及CEO均从无查证。</p>
+            <p class="ed-detail_des">{{exposureDetail.description}}</p>
             <!-- 详情内容 -->
             <div class="ed-detail_content pr">
                 <img class="ed-detail_bg" src="../../../static/images/exposure_detail-bg.png" alt="">
@@ -27,6 +25,7 @@
                 <!-- 官网档案 -->
                 <div class="ed-detail_files">
                     <p class="files_title">官网档案</p>
+                    <img class="ed-detail_img" src="../../../static/images/mine_default.png" alt="">
                     <p class="files_des">Phobos是可挖矿的带有主节点的加密货币，具有权益证明（POS）和工作证明（POW）的特点，但工作证明概念将于2018年4月取消。Phobos基于Lyra2z算法，能以较低的能耗在网络上提供隐私、安全和快速的交易。Phobos的目标是中长期投资，因为它的硬币供应量较低，而且块奖励逐渐减少。</p>
                     <div class="ed-detail_files_link">
                         <p class="files_title">官网地址</p>
@@ -54,15 +53,29 @@
 </template>
 
 <script>
+import { getQuery } from "../../utils/utils";
+import { Http } from "../../utils/httpRequest";
 export default {
     data() {
         return {
-            
+            id: '',
+            exposureDetail:{}
         };
     },
 
+    mounted(){
+        this.id = getQuery().id;
+        this.initDetail();
+    },
+
     methods: {
-        
+        initDetail(){
+            Http.Lget('/details', {id:this.id}, res => {
+                if(res.status === 200){
+                    this.exposureDetail = res.data
+                }
+            });
+        }
     }
 };
 </script>
@@ -82,9 +95,6 @@ export default {
     &_name,&_date{
         font-size: 26rpx;
         color: #CCCCCC;
-    }
-    &_date{
-
     }
     &_laber{
         margin-top: 12rpx;

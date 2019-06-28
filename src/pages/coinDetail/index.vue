@@ -50,9 +50,6 @@
                             </div>
                             <div class="d-exposure_item_li-right">
                                 <button v-for="(tagItem,i) in el.tags" :key="i" class="rightBtn">{{tagItem}}</button>
-                                <!-- <button class="rightBtn">已跑路</button>
-                                <button class="rightBtn">已破获</button>
-                                <button class="rightBtn">已判决</button> -->
                             </div>
                         </li>
                     </ul>
@@ -157,13 +154,11 @@ export default {
                     let dataLength = data.length; // 数据的长度
                     this.hasMore = dataLength < this.pageSize;
                     let initCoinListLength = this.coinList.length; // 初始化时消息列表长度
-                    console.log(initCoinListLength);
                     for (let idx in data) {
                         this.coinList[Number(initCoinListLength) +Number(idx)] = data[idx];
                     }
                     // 转换数据格式
                     this.newCoinList = this.changeCoinList();
-                    // console.log(this.$refs.loadMore);
                     // 是否继续加载页数
                     this.$refs.loadMore.loadMoreComplete(dataLength);
                 } else {
